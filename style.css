@@ -1,0 +1,19 @@
+.title{
+    color: black;
+    font-weight: bold;
+    font-family: fantasy;
+    font-size: 45px;
+}
+
+.textington{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.release{
+    color: black;
+    font-family: fantasy;
+    font-size: 25px;
+}

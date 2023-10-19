@@ -9,7 +9,12 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 $pdo = new PDO($dsn, $user, $pass, $options);
-$stmt = $pdo->query('SELECT * FROM books');
+
+$id = $_GET["id"];
+
+$stmt = $pdo->query("SELECT * FROM books WHERE id={$id}");
+
+$row = $stmt->fetch();
 ?>
 
 <!DOCTYPE html>
@@ -17,24 +22,20 @@ $stmt = $pdo->query('SELECT * FROM books');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello, PHP!</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <ul>
-<?php
-while ($row = $stmt->fetch()) {
-?>
-    <li>
-        <a href="book.php?id=<?= $row['id']?>">
-           <?= $row['title']; ?> 
-        </a>    
-    </li>
-    
-    <?php
-    }
-    ?>
-
-</ul>
+    <div class="textington">
+        <div class="title">
+            <h1>
+                <?=$row["title"]?>
+            </h1>
+        </div>
+        <div class="release">
+            Release date:
+             <?=$row["release_date"]?>
+        </div>
+    </div>
 </body>
 </html>
