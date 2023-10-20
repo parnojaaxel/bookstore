@@ -28,7 +28,7 @@ $auth_row = $auth->fetch();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $row['title']?></title>
+    <title>EDIT <?= $row['title']?></title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,29 +37,10 @@ $auth_row = $auth->fetch();
             <h1>
                 <?=$row["title"]?>
             </h1>
-        </div>
-        <div class="stuff">
-            <div>
-                Release date:
-                <?=$row["release_date"]?>
-            </div>
-            <div>
-                Pages:
-                <?=$row["pages"]?>
-            </div>
-            <div>
-                Price:
-                <?=$row["price"]?>$
-            </div> 
-            <div>
-                Author:
-                <?=$auth_row["first_name"]?> <?=$auth_row["last_name"]?>
-            </div> 
-        </div>        
+        </div>    
     </div>
     <div class="image">
-        <img src="<?=$row["cover_path"]?>" alt="NINJA BALLS WAS HERE">
-        <a href="./edit.php?id=<?= $row['id']?>">Muuda</a>
+        <a href="./book.php?id=<?= $row['id']?>">Tagasi</a>
     </div>
 
     
