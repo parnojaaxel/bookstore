@@ -1,26 +1,17 @@
 <?php
 
-require_once('.env');
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-$pdo = new PDO($dsn, $user, $pass, $options);
+require_once("connect.php");
 
 $id = $_GET["id"];
 
-$stmt = $pdo->query("SELECT * FROM books WHERE id={$id}");
+$books = $pdo->query("SELECT * FROM books WHERE id={$id}");
 
-$row = $stmt->fetch();
+$row = $books->fetch();
 
 $auth = $pdo->query("SELECT * FROM book_authors ba LEFT JOIN authors a ON ba.author_id=a.id WHERE book_id = {$id} ");
 
-$auth_row = $auth->fetch();$auth = $pdo->query("SELECT * FROM book_authors ba LEFT JOIN authors a ON ba.author_id=a.id WHERE book_id = {$id} ");
-
 $auth_row = $auth->fetch();
+
 ?>
 
 <!DOCTYPE html>
@@ -28,40 +19,29 @@ $auth_row = $auth->fetch();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $row['title']?></title>
+    <title>Document</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="text">
-        <div class="title">
-            <h1>
-                <?=$row["title"]?>
-            </h1>
-        </div>
-        <div class="stuff">
-            <div>
-                Release date:
-                <?=$row["release_date"]?>
-            </div>
-            <div>
-                Pages:
-                <?=$row["pages"]?>
-            </div>
-            <div>
-                Price:
-                <?=$row["price"]?>$
-            </div> 
-            <div>
-                Author:
-                <?=$auth_row["first_name"]?> <?=$auth_row["last_name"]?>
-            </div> 
-        </div>        
+    <div class="title">
+        <h1>
+            <?=$row["title"]?>
+            <p><?=$row["summary"]?></p>
+        </h1>
+        <h2>
+            Year: <?=$row["release_date"]?>
+        </h2>
+        <img src="<?=$row["cover_path"]?>" alt="DON DON DOOON">
+        <h3>
+            Price: <?=$row["price"]?>$
+        </h3>
+        <h3>
+            Pages: <?=$row["pages"]?>
+        </h3>
+        <h3>
+            Author: <?=$auth_row["first_name"]?> <?=$auth_row["last_name"]?>
+        </h3>
     </div>
-    <div class="image">
-        <img src="<?=$row["cover_path"]?>" alt="NINJA BALLS WAS HERE">
-        <a href="./edit.php?id=<?= $row['id']?>">Muuda</a>
-    </div>
-
-    
+    <a href="./edit.php?id=<?=$row["id"]?>"><p>Muuda</p></a>
 </body>
 </html>

@@ -1,26 +1,16 @@
 <?php
-
-require_once('.env');
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-$pdo = new PDO($dsn, $user, $pass, $options);
+require_once("connect.php");
 
 $id = $_GET["id"];
 
-$stmt = $pdo->query("SELECT * FROM books WHERE id={$id}");
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $newTitle = $_POST['newTitle'];
+    $stmt = $pdo->prepare("UPDATE books SET title = :title WHERE id = :id");
+    $stmt->execute(['title' => $newTitle, 'id' => $id]);
+}
 
-$row = $stmt->fetch();
-
-$auth = $pdo->query("SELECT * FROM book_authors ba LEFT JOIN authors a ON ba.author_id=a.id WHERE book_id = {$id} ");
-
-$auth_row = $auth->fetch();$auth = $pdo->query("SELECT * FROM book_authors ba LEFT JOIN authors a ON ba.author_id=a.id WHERE book_id = {$id} ");
-
-$auth_row = $auth->fetch();
+$books = $pdo->query("SELECT * FROM books WHERE id = {$id}");
+$row = $books->fetch();
 ?>
 
 <!DOCTYPE html>
@@ -28,21 +18,25 @@ $auth_row = $auth->fetch();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDIT <?= $row['title']?></title>
+    <title>Edit Title</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="text">
-        <div class="title">
-            <h1>
-                <?=$row["title"]?>
-            </h1>
-        </div>    
+    <div class="title">
+        <h1>
+            <?php if (isset($_POST['newTitle'])) {
+                echo $_POST['newTitle'];
+            } else {
+                echo $row["title"];
+            } ?>
+        </h1>
+        <form class="form" method="POST">
+            <div class="form_field">
+                <h2>Title:</h2>
+                <input class="field" type="text" name="newTitle" value="<?= $row["title"] ?>">
+            </div>
+            <input type="submit" value="Save">
+        </form>
     </div>
-    <div class="image">
-        <a href="./book.php?id=<?= $row['id']?>">Tagasi</a>
-    </div>
-
-    
 </body>
 </html>
