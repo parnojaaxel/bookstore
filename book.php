@@ -10,7 +10,6 @@ $row = $books->fetch();
 
 $auth = $pdo->query("SELECT * FROM book_authors ba LEFT JOIN authors a ON ba.author_id=a.id WHERE book_id = {$id} ");
 
-$auth_row = $auth->fetch();
 
 ?>
 
@@ -39,8 +38,19 @@ $auth_row = $auth->fetch();
             Pages: <?=$row["pages"]?>
         </h3>
         <h3>
-            Author: <?=$auth_row["first_name"]?> <?=$auth_row["last_name"]?>
+            Authors: 
         </h3>
+        <ul>
+        <?php
+        while ($auth_row = $auth->fetch()) {
+        ?>
+            <li>
+            <?=$auth_row["first_name"]?> <?=$auth_row["last_name"]?>
+            </li>
+        <?php
+        }
+        ?>
+    </ul>
     </div>
     <div class="links">
         <a href="./index.php?id=<?=$row["id"]?>"><p>Back</p></a>

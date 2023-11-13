@@ -3,21 +3,18 @@ require_once("connect.php");
 
 $id = $_GET["id"];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+if (isset($_POST['book_submit'])) {
     $newTitle = $_POST['newTitle'];
-    $newAuthorFirstName = $_POST['newAuthorFirstName'];
-    $newAuthorLastName = $_POST['newAuthorLastName'];
     $newReleaseDate = $_POST['newRelease_date'];
     $newPrice = $_POST['newPrice'];
     $newType = $_POST['newType'];
 
     $isDeleted = isset($_POST['isDeleted']) ? 1 : 0;
 
-    $stmt = $pdo->prepare("UPDATE books SET title = :title, author_first_name = :author_first_name, author_last_name = :author_last_name, release_date = :release_date, price = :price, type = :type, isDeleted = :isDeleted WHERE id = :id");
+    $stmt = $pdo->prepare("UPDATE books SET title = :title, release_date = :release_date, price = :price, type = :type, isDeleted = :isDeleted WHERE id = :id");
     $stmt->execute([
         'title' => $newTitle,
-        'author_first_name' => $newAuthorFirstName,
-        'author_last_name' => $newAuthorLastName,
         'release_date' => $newReleaseDate,
         'price' => $newPrice,
         'type' => $newType,
@@ -26,8 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ]);
 }
 
+if (isset($_POST['author_submit'])) {
+    $    
+}
+
 $books = $pdo->query("SELECT * FROM books WHERE id = {$id}");
 $row = $books->fetch();
+
+$auth = $pdo->query("SELECT * FROM book_authors ba LEFT JOIN authors a ON ba.author_id=a.id WHERE book_id = {$id} ");
+
+$authors = $pdo->query("SELECT * FROM authors ");
 ?>
 
 <!DOCTYPE html>
@@ -53,14 +58,6 @@ $row = $books->fetch();
                 <input class="field" type="text" name="newTitle" value="<?= $row["title"] ?>">
             </div>
             <div class="form_field">
-                <h2>Author's First Name:</h2>
-                <input class="field" type="text" name="newAuthorFirstName" value="<?= $row["author_first_name"] ?>">
-            </div>
-            <div class="form_field">
-                <h2>Author's Last Name:</h2>
-                <input class="field" type="text" name="newAuthorLastName" value="<?= $row["author_last_name"] ?>">
-            </div>
-            <div class="form_field">
                 <h2>Date:</h2>
                 <input class="field" type="text" name="newRelease_date" value="<?= $row["release_date"] ?>">
             </div>
@@ -84,8 +81,42 @@ $row = $books->fetch();
                 <h2>Is Deleted:</h2>
                 <input class="field" type="checkbox" name="isDeleted" value="1" <?php if ($row["isDeleted"] == 1) echo 'checked'; ?>> Is deleted
             </div>
-            <input type="submit" value="Save">
+            <input type="submit" value="Save" name="book_submit">
         </form> 
+        <h3>
+            Authors: 
+        </h3>
+        <ul>
+        <?php
+        while ($auth_row = $auth->fetch()) {
+        ?>
+            <li>
+            <?=$auth_row["first_name"]?> <?=$auth_row["last_name"]?>
+            </li>
+        <?php
+        }
+        ?>
+    </ul>
+
+    <form action="edit.php" method="POST">
+
+    <label for="authors">Choose authors:</label>
+
+    <select name="author_id" id="authors">
+    <?php
+        while ($author = $authors->fetch()) {
+        ?>
+            <option value="<?=$author["id"]?>">
+            <?=$author["first_name"]?> <?=$author["last_name"]?>
+            </option>
+        <?php
+        }
+        ?>
+    </select>
+    <input type="submit" value="Save" name="author_submit">
+    <input type="hidden" name="book_id" value="<?=$id?>">
+    </form>
+
         <a href="./book.php?id=<?=$row["id"]?>"><p>Back</p></a>
     </div>
 </body>
