@@ -33,7 +33,7 @@ $auth_row = $auth->fetch();
         </h2>
         <img src="<?=$row["cover_path"]?>" alt="DON DON DOOON">
         <h3>
-            Price: <?=$row["price"]?>$
+            Price: <?=$row["price"]?>€
         </h3>
         <h3>
             Pages: <?=$row["pages"]?>
@@ -42,6 +42,9 @@ $auth_row = $auth->fetch();
             Author: <?=$auth_row["first_name"]?> <?=$auth_row["last_name"]?>
         </h3>
     </div>
-    <a href="./edit.php?id=<?=$row["id"]?>"><p>Muuda</p></a>
+    <div class="links">
+        <a href="./index.php?id=<?=$row["id"]?>"><p>Back</p></a>
+        <a href="./edit.php?id=<?=$row["id"]?>"><p>Muuda</p></a>
+    </div>
 </body>
 </html>
