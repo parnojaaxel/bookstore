@@ -5,15 +5,19 @@ $id = $_GET["id"];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $newTitle = $_POST['newTitle'];
+    $newAuthorFirstName = $_POST['newAuthorFirstName'];
+    $newAuthorLastName = $_POST['newAuthorLastName'];
     $newReleaseDate = $_POST['newRelease_date'];
     $newPrice = $_POST['newPrice'];
     $newType = $_POST['newType'];
 
     $isDeleted = isset($_POST['isDeleted']) ? 1 : 0;
 
-    $stmt = $pdo->prepare("UPDATE books SET title = :title, release_date = :release_date, price = :price, type = :type, isDeleted = :isDeleted WHERE id = :id");
+    $stmt = $pdo->prepare("UPDATE books SET title = :title, author_first_name = :author_first_name, author_last_name = :author_last_name, release_date = :release_date, price = :price, type = :type, isDeleted = :isDeleted WHERE id = :id");
     $stmt->execute([
         'title' => $newTitle,
+        'author_first_name' => $newAuthorFirstName,
+        'author_last_name' => $newAuthorLastName,
         'release_date' => $newReleaseDate,
         'price' => $newPrice,
         'type' => $newType,
@@ -46,7 +50,15 @@ $row = $books->fetch();
         <form class="form" method="POST">
             <div class="form_field">
                 <h2>Title:</h2>
-                <input class="field" type="text" name="newTitle" value="<?= $row["author"] ?>">
+                <input class="field" type="text" name="newTitle" value="<?= $row["title"] ?>">
+            </div>
+            <div class="form_field">
+                <h2>Author's First Name:</h2>
+                <input class="field" type="text" name="newAuthorFirstName" value="<?= $row["author_first_name"] ?>">
+            </div>
+            <div class="form_field">
+                <h2>Author's Last Name:</h2>
+                <input class="field" type="text" name="newAuthorLastName" value="<?= $row["author_last_name"] ?>">
             </div>
             <div class="form_field">
                 <h2>Date:</h2>
